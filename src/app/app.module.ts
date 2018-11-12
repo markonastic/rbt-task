@@ -1,12 +1,17 @@
+import { LastfmService } from './services/lastfm.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AlbumComponent } from './album/album.component';
+import { HttpModule } from '@angular/http';
 
-
+const appRoutes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'album/:mbid', component: AlbumComponent }
+];
 @NgModule({
   declarations: [
     AppComponent,
@@ -14,9 +19,15 @@ import { AlbumComponent } from './album/album.component';
     AlbumComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpModule,
+    RouterModule.forRoot(
+      appRoutes
+      )
   ],
-  providers: [],
+  providers: [
+    LastfmService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
