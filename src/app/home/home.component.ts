@@ -14,16 +14,12 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.lastfmService.getArtists().subscribe(response => {
-      this.artists = response.artists.artist;
-      console.log(response);
+      this.artists = response.topartists.artist;
       for (let i = 0; i < 10; i++) {
         this.lastfmService.getArtistInfo(this.artists[i].mbid).subscribe(response1 => {
           this.artists[i].summary = response1.artist.bio.summary.substring(0, 300);
-          console.log(response1.artist.bio.summary);
-          console.log(this.artists[i].summary);
         });
       }
     });
   }
-
 }

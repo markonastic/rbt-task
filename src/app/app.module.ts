@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AlbumComponent } from './album/album.component';
 import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,6 +23,8 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     HttpModule,
+    InfiniteScrollModule,
+    FormsModule,
     RouterModule.forRoot(
       appRoutes
       )
