@@ -11,44 +11,44 @@ export class AlbumComponent implements OnInit {
 
   mbid: string;
   albums = [];
-  showAlbums = null;
+  showAlbums = [];
   page = 1;
   totalPages: number;
   scrollSum = 0;
   inputValue = '';
+  artist: string;
+  search = false;
+  index = 0;
 
   constructor(private lastfmService: LastfmService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.mbid = this.route.snapshot.paramMap.get('mbid');
-    this.lastfmService.getAlbums(this.mbid, this.page).subscribe(response => {
-      this.totalPages = response.topalbums['@attr'].totalPages;
-      this.showAlbums = [];
-      this.albums.push(...this.checkAlbums(response.topalbums.album));
-      this.addNewAlbums();
-    });
+    this.artist = this.route.snapshot.paramMap.get('artist');
+    this.getAlbums();
   }
 
   getAlbums() {
     this.lastfmService.getAlbums(this.mbid, this.page).subscribe(response => {
-      this.albums.push(...this.checkAlbums(response.topalbums.album));
+      this.albums.push(...response.topalbums.album);
+      if (this.scrollSum === 0) {
+        this.addNewAlbums();
+      }
     });
   }
 
   addNewAlbums() {
-    this.showAlbums.push(...this.albums.slice(this.scrollSum * 10, this.scrollSum * 10 + 10));
-    this.getTracks();
-  }
-
-  getTracks() {
-    for (let i = this.scrollSum * 10; i < this.showAlbums.length; i++) {
-      this.lastfmService.getAlbumInfo(
-        this.showAlbums[i].artist.name.replace(/\s+/g, '+'),
-        this.showAlbums[i].name.replace(/\s+/g, '+'))
-          .subscribe((response) => {
-            console.log(response);
-            this.showAlbums[i].tracks = response.album.tracks.track;
-          });
+    let j = 0;
+    for (let i = this.index; i < this.albums.length; i++) {
+      if (this.albums[i].name !== '(null)' || this.albums[i].name !== '(no title)') {
+        this.showAlbums.push(this.albums[i]);
+        j++;
+      }
+      if (j === 10) {
+        this.index = i + 1;
+        this.getTracks();
+        return;
+      }
     }
   }
 
@@ -61,15 +61,66 @@ export class AlbumComponent implements OnInit {
     return newAlbums;
   }
 
-  onScroll() {
-    this.scrollSum++;
-    if (this.page === this.totalPages) {
-      return;
+  getSearchAlbums() {
+    this.showAlbums = [];
+    this.lastfmService.getSearchAlbums(this.inputValue).subscribe(response1 => {
+      this.albums = response1.results.albummatches.album;
+      this.addSearchAlbums();
+    });
+  }
+
+  addSearchAlbums() {
+    let j = 0;
+    for (let i = this.index; i < this.albums.length; i++) {
+      if (this.albums[i].artist.toLowerCase().indexOf(this.artist.toLowerCase()) >= 0) {
+        this.showAlbums.push(this.albums[i]);
+        j++;
+      }
+      if (j === 10 || i + 1 === this.albums.length) {
+        this.index = i + 1;
+        this.getTracks();
+        return;
+      }
     }
-    if ((this.scrollSum + 1) % 5 === 0) {
+  }
+
+  getTracks() {
+    for (let i = this.scrollSum * 10; i < this.showAlbums.length; i++) {
+      this.lastfmService.getAlbumInfo(
+        this.artist.replace(/\s+/g, '+'),
+        this.showAlbums[i].name.replace(/\s+/g, '+'))
+          .subscribe((response) => {
+            this.showAlbums[i].tracks = response.album.tracks.track;
+          });
+    }
+  }
+
+  onScroll() {
+    if (this.search) {
+      this.addSearchAlbums();
+    } else {
+      this.scrollSum++;
+      if ((this.scrollSum + 2) % 5 === 0) {
       this.page++;
       this.getAlbums();
+      }
+      this.addNewAlbums();
     }
-    this.addNewAlbums();
+  }
+
+  searchToggle() {
+    this.showAlbums = [];
+    this.albums = [];
+    this.index = 0;
+    document.querySelector('.main-content').scrollTo(0, 0);
+    if (this.inputValue === '') {
+      this.scrollSum = 0;
+      this.search = false;
+      this.page = 1;
+      this.getAlbums();
+      return;
+    }
+    this.search = true;
+    this.getSearchAlbums();
   }
 }

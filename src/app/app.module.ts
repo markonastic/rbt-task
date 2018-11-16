@@ -12,7 +12,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'album/:mbid', component: AlbumComponent }
+  { path: 'album/:mbid/:artist', component: AlbumComponent }
 ];
 @NgModule({
   declarations: [
