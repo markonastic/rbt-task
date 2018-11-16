@@ -1,0 +1,43 @@
+<div class="main-content" *ngIf="showAlbums" infiniteScroll
+                                            [infiniteScrollDistance]="0.3"
+                                            [infiniteScrollThrottle]="1000"
+                                            (scrolled)="onScroll()"
+                                            [scrollWindow]="false" scrolloffset="offset">
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" [(ngModel)]="inputValue" (keyup.enter)="searchToggle()" type="search" name="search" placeholder="Enter album name" aria-label="Search">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" (click)="searchToggle()">Go!</button>
+        </span>
+      </form>
+    </div>
+  </nav>
+  <div class="card-window" *ngIf="showAlbums !== []" >
+    <div *ngFor="let album of showAlbums;let i=index">
+      <div class="card-container">
+        <div class="card-inner">
+          <div class="card front">
+            <img class="card-img-top" *ngIf="album.image[2]['#text']; else elseBlock" src="{{album.image[2]['#text']}}" alt="Album picture">
+            <ng-template #elseBlock><img class="card-img-top" src="https://expertscolumn.com/images/placeholder-min.jpg" alt="No picture"></ng-template>
+            <div class="card-body">
+              <span class="card-text">Album:<br>{{ album.name }}</span>
+            </div>
+          </div>
+          <div class="card back">
+            <div class="card-body">
+              <div class="card-text" *ngIf="album.tracks">
+                <div *ngFor="let track of album.tracks;let j=index"><a href="{{track.url}}">{{ j+1 }}. {{ track.name }}</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <span>By Marko Nastic | All data used from last.fm API</span>
+  </div>
+</div>
+
+

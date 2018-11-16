@@ -1,0 +1,20 @@
+<div class="main-content" *ngIf="artists">
+  <div class="card-container" *ngFor="let artist of artists;let i=index">
+    <div class="card-inner">
+      <div class="card front">
+        <img class="card-img-top" src="{{artist.image[2]['#text']}}" alt="Artist picture">
+          <div class="card-body">
+            <span class="card-text">Rank: {{ i+1 }}</span><br>
+            <span class="card-text">Artist:<br>{{ artist.name }}</span>
+          </div>
+      </div>
+      <div class="card back">
+        <div class="card-body">
+          <p class="card-title">Summary:</p>
+          <p *ngIf="artist.summary" class="card-text">{{ artist.summary }}</p>
+          <a [routerLink]="['/album',artist.mbid, artist.name]" class="btn btn-primary">See albums</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
