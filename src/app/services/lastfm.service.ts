@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class LastfmService {
 
-  url = 'http://ws.audioscrobbler.com/2.0/?';
+  url = 'https://ws.audioscrobbler.com/2.0/?';
 
   constructor(private http: Http) { }
 
