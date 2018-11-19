@@ -115,3 +115,13 @@
     }
   }
 }
+
+@media screen and (max-width: 500px) {
+  .main-content {
+    .navbar {
+      input {
+        width: 235px;
+      }
+    }
+  }
+}
