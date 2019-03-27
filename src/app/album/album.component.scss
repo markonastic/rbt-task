@@ -14,9 +14,12 @@
     margin-bottom: 10px;
     z-index: 5;
     background-color: rgba(218, 217, 217, 0.5);
-    input {
-      width: 400px;
-      margin: 0 !important;
+    .container {
+      position: absolute;
+      input {
+        width: 400px;
+        margin: 0 !important;
+      }
     }
   }
   .card-window {
