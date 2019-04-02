@@ -63,8 +63,8 @@ export class AlbumComponent implements OnInit {
 
   getSearchAlbums() {
     this.showAlbums = [];
-    this.lastfmService.getSearchAlbums(this.inputValue).subscribe(response1 => {
-      this.albums = response1.results.albummatches.album;
+    this.lastfmService.getSearchAlbums(this.inputValue).subscribe(response => {
+      this.albums = response.results.albummatches.album;
       this.addSearchAlbums();
     });
   }
@@ -79,6 +79,7 @@ export class AlbumComponent implements OnInit {
       if (j === 10 || i + 1 === this.albums.length) {
         this.index = i + 1;
         this.getTracks();
+        console.log(this.showAlbums);
         return;
       }
     }
@@ -90,7 +91,9 @@ export class AlbumComponent implements OnInit {
         this.artist.replace(/\s+/g, '+'),
         this.showAlbums[i].name.replace(/\s+/g, '+'))
           .subscribe((response) => {
-            this.showAlbums[i].tracks = response.album.tracks.track;
+            if (response.album) {
+              this.showAlbums[i].tracks = response.album.tracks.track;
+            }
           });
     }
   }

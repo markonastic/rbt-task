@@ -8,12 +8,12 @@
       <form class="form-inline">
         <input class="form-control mr-sm-2" [(ngModel)]="inputValue" (keyup.enter)="searchToggle()" type="search" name="search" placeholder="Enter album name" aria-label="Search">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button" (click)="searchToggle()">Go!</button>
+          <button class="btn btn-default" type="button" (click)="searchToggle()">Search</button>
         </span>
       </form>
     </div>
   </nav>
-  <div class="card-window" *ngIf="showAlbums !== []" >
+  <div class="card-window">
     <div *ngFor="let album of showAlbums;let i=index">
       <div class="card-container">
         <div class="card-inner">
@@ -34,7 +34,11 @@
         </div>
       </div>
     </div>
+    <div class="no-albums" *ngIf="showAlbums.length === 0">
+      <h3>There is no albums with that name from artist you have chosen!</h3>
+    </div>
   </div>
+
   <div class="footer">
     <span>By Marko Nastic | All data used from last.fm API</span>
   </div>
